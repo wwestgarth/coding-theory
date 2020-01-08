@@ -1,4 +1,4 @@
-
+from textwrap import wrap
 
 def distance(code1, code2):
     """
@@ -22,3 +22,46 @@ def weight(code):
         raise TypeError
     identity = "0"*len(code)
     return distance(identity, code)
+    
+    
+class Codex:
+    """
+    Class that given a list of data, maps these to bit values and allows
+    conversion between the two
+    """
+    
+    @staticmethod
+    def decimal_to_binary(dec):
+        return "{0:b}".format(dec)
+        
+    def __init__(self, data_set):
+        self.data_set = data_set[:]
+        
+        # Calculate bit length
+        self.max_bit_len = len( self.decimal_to_binary(len(data_set) -1) )
+        
+    def bits_to_data(self, bits):
+        position = int(bits,2)
+        return self.data_set[position]
+        
+    def data_to_bits(self, data):
+        position = self.data_set.index(data)
+        return self.decimal_to_binary(position).rjust(self.max_bit_len,'0')
+    
+class Code:
+    
+    def __init__(self, data_set):
+        self.codex = Codex(data_set)
+            
+    def encode(self, input_steam):
+        
+        bit_stream = [ self.codex.data_to_bits(x) for x in input_steam ]
+        
+        return "".join(bit_stream)
+        
+    def decode(self, bit_steam):
+        
+        split_stream = wrap(bit_steam, self.codex.max_bit_len)
+        return [self.codex.bits_to_data(x) for x in split_stream]
+    
+        
