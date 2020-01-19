@@ -1,1 +1,1 @@
-import hamming
+from . import hamming

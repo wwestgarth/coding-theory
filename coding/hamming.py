@@ -34,24 +34,24 @@ class Codex:
     def decimal_to_binary(dec):
         return "{0:b}".format(dec)
         
-    def __init__(self, data_set):
-        self.data_set = data_set[:]
+    def __init__(self, basis):
+        self.basis = basis[:]
         
         # Calculate bit length
-        self.max_bit_len = len( self.decimal_to_binary(len(data_set) -1) )
+        self.max_bit_len = len( self.decimal_to_binary(len(basis) -1) )
         
     def bits_to_data(self, bits):
         position = int(bits,2)
-        return self.data_set[position]
+        return self.basis[position]
         
     def data_to_bits(self, data):
-        position = self.data_set.index(data)
+        position = self.basis.index(data)
         return self.decimal_to_binary(position).rjust(self.max_bit_len,'0')
     
 class Code:
     
-    def __init__(self, data_set):
-        self.codex = Codex(data_set)
+    def __init__(self, basis):
+        self.codex = Codex(basis)
             
     def encode(self, input_steam):
         
