@@ -86,6 +86,10 @@ class Code:
         """
         Reduce all expanded bits to restore original bit-basis
         """
+
+        if not bits in self._hammed_basis:
+            return None
+
         reduced = []
         for i in range(0, len(bits), self.hamming_distance):
             reduced.append( bits[i] )
@@ -98,6 +102,7 @@ class Code:
 
         self.codex = Codex(basis)
         self.hamming_distance=hamming_distance
+        self._hammed_basis = {self._expand(self.codex.data_to_bits(x)) for x in basis}
 
     def encode(self, input_steam):
         """
@@ -113,5 +118,4 @@ class Code:
         """
         split_stream = wrap(bit_steam, self.hamming_distance*self.codex.max_bit_len)
         split_stream = [self._reduce(x) for x in split_stream]
-        return [self.codex.bits_to_data(x) for x in split_stream]
-
+        return [self.codex.bits_to_data(x) if x else None for x in split_stream]
