@@ -34,6 +34,13 @@ class Codex:
     def decimal_to_binary(dec):
         return "{0:b}".format(dec)
 
+    def _convert_data_to_bits(self, data):
+        """
+        Convert the given vector from the basis into a bit-representations
+        """
+        position = self.basis.index(data)
+        return self.decimal_to_binary(position).rjust(self.max_bit_len,'0')
+
     def __init__(self, basis):
         # Store basis
         self.basis = basis[:]
@@ -41,20 +48,28 @@ class Codex:
         # Calculate bit length
         self.max_bit_len = len( self.decimal_to_binary(len(basis) -1) )
 
+        self._map_data_to_bits = dict()
+        self._map_bits_to_data = dict()
+
+        # Create double map
+        for basis_vector in self.basis:
+            as_bits = self._convert_data_to_bits(basis_vector)
+            self._map_data_to_bits[basis_vector] = as_bits
+            self._map_bits_to_data[as_bits] = basis_vector
+
+
     def bits_to_data(self, bits):
         """
-        Convert given bits generated from `basis' back into their true value
+        Lookup given bits in map to return their value in the `basis'
         """
-
-        position = int(bits,2)
-        return self.basis[position]
+        return self._map_bits_to_data[bits]
 
     def data_to_bits(self, data):
         """
-        Convert the given vectory from the basis into a bit-representations
+        Lookup given data in map to return their value in as bits
         """
-        position = self.basis.index(data)
-        return self.decimal_to_binary(position).rjust(self.max_bit_len,'0')
+        return self._map_data_to_bits[data]
+        
 
 class Code:
     """
