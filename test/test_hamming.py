@@ -61,10 +61,37 @@ def test_code_forced_hamming(test_input):
 
 
 def test_ruined_message():
-
+    """
+    Test that a message with a flipped bit returns None for that particular piece of data
+    """
     test_input = ["duck", "Goose", "Horse"]
     code = hamming.Code(test_input, hamming_distance=3)
     encoded = code.encode([test_input[0]])
     decoded = code.decode(flip_bit(encoded, 0))
 
     assert decoded[0] is None
+    code.set_attempt_recovery(True)
+    decoded = code.decode(flip_bit(encoded, 0))
+    assert decoded[0] == test_input[0]
+
+def test_recovery_toggle():
+    """
+    Test that the attempt_recovery option can be toggled
+    """
+    test_input = ["duck", "Goose", "Horse"]
+    code = hamming.Code(test_input, hamming_distance=3)
+    assert not code.set_attempt_recovery(True)
+    assert code.set_attempt_recovery(False)
+    assert not code.set_attempt_recovery(False)
+
+
+def test_closet_basis():
+    """
+    Test that the attempt_recovery option can be toggled
+    """
+    test_input = ["duck", "Goose", "Horse"]
+    code = hamming.Code(test_input, hamming_distance=3)
+    encoded = code.encode([test_input[0]])
+    assert code._closest_basis_vector(flip_bit(encoded, 0)) == encoded
+
+
