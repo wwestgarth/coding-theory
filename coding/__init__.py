@@ -1,1 +1,1 @@
-from . import hamming
+from . import codes, hamming
